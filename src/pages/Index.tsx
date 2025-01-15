@@ -1,21 +1,25 @@
 import { Stethoscope } from "lucide-react";
 import { RegistrationForm } from "@/components/RegistrationForm";
-import { useAuth0 } from "@auth0/auth0-react";
 import { Button } from "@/components/ui/button";
 
 const Index = () => {
-  const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
+  // TODO: Implement Auth0 authentication
+  // const { loginWithRedirect, isAuthenticated, isLoading } = useAuth0();
+  const isAuthenticated = false; // Temporary mock state
+  const isLoading = false; // Temporary mock state
 
   const handleGoogleLogin = () => {
-    loginWithRedirect({
-      appState: { returnTo: window.location.pathname }
-    });
+    // TODO: Implement Auth0 Google login
+    // For now, just show the registration form
+    console.log("Google login clicked");
+    window.location.reload(); // Temporary solution to show registration form
   };
 
   const handleEmailLogin = () => {
-    loginWithRedirect({
-      appState: { returnTo: window.location.pathname }
-    });
+    // TODO: Implement Auth0 email login
+    // For now, just show the registration form
+    console.log("Email login clicked");
+    window.location.reload(); // Temporary solution to show registration form
   };
 
   if (isLoading) {
