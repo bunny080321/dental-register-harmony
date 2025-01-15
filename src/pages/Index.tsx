@@ -8,18 +8,12 @@ const Index = () => {
 
   const handleGoogleLogin = () => {
     loginWithRedirect({
-      authorizationParams: {
-        connection: 'google-oauth2'
-      },
       appState: { returnTo: window.location.pathname }
     });
   };
 
-  const handlePhoneLogin = () => {
+  const handleEmailLogin = () => {
     loginWithRedirect({
-      authorizationParams: {
-        connection: 'sms'
-      },
       appState: { returnTo: window.location.pathname }
     });
   };
@@ -80,11 +74,11 @@ const Index = () => {
                 Sign in with Google
               </Button>
               <Button
-                onClick={handlePhoneLogin}
+                onClick={handleEmailLogin}
                 className="w-full"
                 variant="default"
               >
-                Sign in with Phone Number
+                Sign in with Email
               </Button>
             </div>
           </div>
