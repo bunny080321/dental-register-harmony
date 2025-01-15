@@ -10,8 +10,8 @@ const queryClient = new QueryClient();
 
 const App = () => (
   <Auth0Provider
-    domain="YOUR_AUTH0_DOMAIN"
-    clientId="YOUR_AUTH0_CLIENT_ID"
+    domain="dev-0lzffbzlvkxgxjwe.us.auth0.com"
+    clientId="z2dWiFCJrGOCwC2J9hLHwjvbfi5S59sB"
     authorizationParams={{
       redirect_uri: window.location.origin,
     }}

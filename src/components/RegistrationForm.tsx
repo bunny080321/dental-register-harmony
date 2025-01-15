@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,7 +24,7 @@ const phoneRegex = new RegExp(
 const formSchema = z.object({
   firstName: z.string().min(2, "First name must be at least 2 characters"),
   lastName: z.string().min(2, "Last name must be at least 2 characters"),
-  email: z.string().email("Invalid email address"),
+  email: z.string().email("Invalid email address").optional(),
   phone: z.string().regex(phoneRegex, "Invalid phone number"),
   city: z.string().min(2, "City must be at least 2 characters"),
   hasClinic: z.boolean(),
@@ -35,14 +35,21 @@ export const RegistrationForm = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { user } = useAuth0();
+  const [isPhoneAuth, setIsPhoneAuth] = useState(false);
+
+  useEffect(() => {
+    if (user?.sub?.startsWith('sms|')) {
+      setIsPhoneAuth(true);
+    }
+  }, [user]);
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       firstName: user?.given_name || "",
       lastName: user?.family_name || "",
-      email: user?.email || "",
-      phone: "",
+      email: isPhoneAuth ? "" : user?.email || "",
+      phone: user?.phone_number || "",
       city: "",
       hasClinic: false,
       clinicName: "",
@@ -112,27 +119,29 @@ export const RegistrationForm = () => {
           />
         </div>
 
-        <FormField
-          control={form.control}
-          name="email"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Email</FormLabel>
-              <FormControl>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-dental-500" />
-                  <Input
-                    className="pl-9"
-                    placeholder="doctor@example.com"
-                    type="email"
-                    {...field}
-                  />
-                </div>
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        {!isPhoneAuth && (
+          <FormField
+            control={form.control}
+            name="email"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <div className="relative">
+                    <Mail className="absolute left-3 top-3 h-4 w-4 text-dental-500" />
+                    <Input
+                      className="pl-9"
+                      placeholder="doctor@example.com"
+                      type="email"
+                      {...field}
+                    />
+                  </div>
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        )}
 
         <FormField
           control={form.control}
