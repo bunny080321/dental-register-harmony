@@ -15,6 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
+import { useAuth0 } from "@auth0/auth0-react";
 
 const phoneRegex = new RegExp(
   /^([+]?[\s0-9]+)?(\d{3}|[(]?[0-9]+[)])?([-]?[\s]?[0-9])+$/
@@ -33,13 +34,14 @@ const formSchema = z.object({
 export const RegistrationForm = () => {
   const { toast } = useToast();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const { user } = useAuth0();
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
+      firstName: user?.given_name || "",
+      lastName: user?.family_name || "",
+      email: user?.email || "",
       phone: "",
       city: "",
       hasClinic: false,
@@ -51,8 +53,7 @@ export const RegistrationForm = () => {
     setIsSubmitting(true);
     try {
       console.log("Form values:", values);
-      // Here you would typically make an API call to register the dentist
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // Simulate API call
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       toast({
         title: "Registration Successful!",
         description: "Welcome to Indian Dental Association.",
@@ -73,9 +74,9 @@ export const RegistrationForm = () => {
     <Form {...form}>
       <form
         onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-6 animate-form-appear"
+        className="space-y-4 sm:space-y-6 animate-form-appear"
       >
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           <FormField
             control={form.control}
             name="firstName"
